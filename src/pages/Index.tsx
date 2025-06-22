@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import "./Index.css";
 import KuromojiServices from "../services/kuromojiService";
+import type { Token } from "../types/Token";
 
 function Index() {
     const [text, setText] = useState<string>("");
-    const texts: string[] = ["りんご みかん みかん バナナ", "りんご バナナ バナナ キウィ"];
+    const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
     const kuromoji = useRef<KuromojiServices | null>(null);
 
-    const [test, setTest] = useState<any>();
+    const [test, setTest] = useState<Token[]>([]);
 
     /**
      * ページがローディングされた時に１回実行
@@ -26,17 +27,21 @@ function Index() {
         initialize();
     }, []);
 
-    const handleEnterKeyPress = async () => {};
+    const handleEnterKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            console.log(kuromoji.current?.extractIndexWord(test));
+        }
+    };
 
     return (
         <div>
-            {/* <input
+            <input
                 value={text}
                 onChange={e => {
                     setText(e.target.value);
                 }}
                 onKeyDown={handleEnterKeyPress}
-            ></input> */}
+            />
             <p>{JSON.stringify(test)}</p>
         </div>
     );

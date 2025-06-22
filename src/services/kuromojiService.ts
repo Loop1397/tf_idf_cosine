@@ -1,4 +1,5 @@
 import * as kuromoji from "@patdx/kuromoji";
+import type { Token } from "../types/Token";
 
 // kuromojiを使うためのclass
 class KuromojiServices {
@@ -37,15 +38,25 @@ class KuromojiServices {
             throw new Error("Tokenizerが初期化されていません。 先にinit()メッソードを実行してください。");
         }
 
-        try {
-            // 形態素解析
-            const tokens = this.tokenizer.tokenize(text);
-            console.log(tokens);
+        // 形態素解析
+        const tokens = this.tokenizer.tokenize(text);
+        console.log(tokens);
 
-            return tokens;
-        } catch (e) {
-            return e;
-        }
+        return tokens;
+    };
+
+    /**
+     * kuromojiによって形態素解析された結果からある品詞の単語を抽出するメッソード
+     * 抽出される単語のdefault品詞は名詞になっているが、必要によって他の品詞に変えることもできる。
+     */
+    public extractIndexWord = (tokens: Token[], wordClass: string = "名詞") => {
+        const indexWords = tokens
+            .filter(token => token.pos === wordClass)
+            .map(token => {
+                return token.basic_form;
+            });
+
+        return indexWords;
     };
 }
 
