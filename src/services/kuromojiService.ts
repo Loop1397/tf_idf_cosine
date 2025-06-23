@@ -5,7 +5,7 @@ import type { Token } from "../types/Token";
 class KuromojiServices {
     private tokenizer: any;
 
-    constructor() {}
+    constructor() { }
 
     /**
      * 初期化に必要なメッソード(ex - TokenizerBuilder.build())が非同期処理を必要とするが、
@@ -53,7 +53,7 @@ class KuromojiServices {
         const indexWords = tokens
             .filter(token => token.pos === wordClass)
             .map(token => {
-                return token.basic_form;
+                return token.surface_form;
             });
 
         return indexWords;
