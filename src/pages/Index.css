@@ -1,0 +1,52 @@
+#wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+    gap: 20px;
+}
+
+#input-section {
+    width: 300px;
+    height: 100%;
+    box-shadow: 0px 8px 24px -2px rgb(223, 223, 223);
+    border-radius: 10px;
+    background-color: white;
+    padding: 30px;
+}
+
+#input-section p {
+    margin-top: 20px;
+    color: #525c6b;
+    font-family: 'Montserrat';
+    font-size: 18px;
+    font-weight: 500;
+}
+
+#input-section textarea {
+    margin-top: 5px;
+    background-color: #F2F5F9;
+
+    font-family: "Noto Sans JP";
+    width: 100%;
+    resize: none;
+    font-size: 16px;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+#input-section textarea:focus {
+    outline: 1px solid #1366F2;
+}
+
+#content-section {
+    width: 800px;
+    height: 100%;
+    box-shadow: 0px 8px 24px -2px rgb(223, 223, 223);
+    border-radius: 10px;
+    background-color: white;
+}
