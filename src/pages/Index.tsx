@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import "./Index.css";
-import KuromojiServices from "../services/kuromojiService";
+import Tokenizer from "../utils/tokenizer";
 import type { Token } from "../types/Token";
 
 function Index() {
     const [query, setQuery] = useState<string>("");
     const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
-    const kuromoji = useRef<KuromojiServices | null>(null);
+    const kuromoji = useRef<Tokenizer | null>(null);
 
     const [test, setTest] = useState<Token[]>([]);
 
@@ -16,7 +16,7 @@ function Index() {
      */
     useEffect(() => {
         const initialize = async () => {
-            const instance = new KuromojiServices();
+            const instance = new Tokenizer();
             await instance.init(); // 非同期初期化メッソード呼び出し
             kuromoji.current = instance;
 
@@ -32,11 +32,11 @@ function Index() {
         const indexWords = kuromoji.current?.extractIndexWord(tokens);
 
         return indexWords;
-    }
+    };
 
     const handleEnterKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-            extractIndexWordFromText(query)
+            extractIndexWordFromText(query);
         }
     };
 

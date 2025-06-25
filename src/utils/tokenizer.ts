@@ -2,10 +2,10 @@ import * as kuromoji from "@patdx/kuromoji";
 import type { Token } from "../types/Token";
 
 // kuromojiを使うためのclass
-class KuromojiServices {
-    private tokenizer: any;
+class Tokenizer {
+    private kuromojiTokenizer: any;
 
-    constructor() { }
+    constructor() {}
 
     /**
      * 初期化に必要なメッソード(ex - TokenizerBuilder.build())が非同期処理を必要とするが、
@@ -14,7 +14,7 @@ class KuromojiServices {
      * 初期化をせずに他のメッソードを実行したらエラーが出るように作成する。
      */
     public init = async (): Promise<void> => {
-        if (this.tokenizer) return;
+        if (this.kuromojiTokenizer) return;
 
         const myLoader: kuromoji.LoaderConfig = {
             async loadArrayBuffer(url: string): Promise<ArrayBufferLike> {
@@ -28,18 +28,18 @@ class KuromojiServices {
             },
         };
 
-        this.tokenizer = await new kuromoji.TokenizerBuilder({
+        this.kuromojiTokenizer = await new kuromoji.TokenizerBuilder({
             loader: myLoader,
         }).build();
     };
 
     public tokenize = (text: string) => {
-        if (!this.tokenizer) {
+        if (!this.kuromojiTokenizer) {
             throw new Error("Tokenizerが初期化されていません。 先にinit()メッソードを実行してください。");
         }
 
         // 形態素解析
-        const tokens = this.tokenizer.tokenize(text);
+        const tokens = this.kuromojiTokenizer.tokenize(text);
         console.log(tokens);
 
         return tokens;
@@ -60,4 +60,4 @@ class KuromojiServices {
     };
 }
 
-export default KuromojiServices;
+export default Tokenizer;
