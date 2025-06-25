@@ -10,6 +10,10 @@ function Index() {
 
     const [test, setTest] = useState<Token[]>([]);
 
+    const [tokenArrays, setTokenArrays] = useState<string[][]>();
+
+    const [vocabularys, setVocabularys] = useState<string[]>([]);
+
     /**
      * ページがローディングされた時に１回実行
      * kuromojiを使うための準備を行う。
@@ -20,23 +24,30 @@ function Index() {
             await instance.init(); // 非同期初期化メッソード呼び出し
             kuromoji.current = instance;
 
-            const result = await kuromoji.current.tokenize(texts[0]);
-            setTest(result);
+            // 文書からtokenを抽出し、それらをtokenArraysに入れる
+            const tokensFromDocuments: string[][] = [];
+            texts.forEach(text => {
+                tokensFromDocuments.push(kuromoji.current!.tokenize(text));
+            });
+            setTokenArrays(tokensFromDocuments);
+
+            // 重なっているtokenを全て消したarrayをvocabularysに記入
+            const vocabularySet = new Set(tokensFromDocuments.flat());
+            setVocabularys([...vocabularySet]);
         };
 
         initialize();
     }, []);
 
-    const extractIndexWordFromText = (text: string) => {
-        const tokens = kuromoji.current?.tokenize(text);
-        const indexWords = kuromoji.current?.extractIndexWord(tokens);
+    const extractTokensFromText = (text: string) => {
+        const tokens = kuromoji.current!.tokenize(text);
 
-        return indexWords;
+        return tokens;
     };
 
     const handleEnterKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-            extractIndexWordFromText(query);
+            console.log(vocabularys);
         }
     };
 
