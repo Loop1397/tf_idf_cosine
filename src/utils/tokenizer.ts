@@ -33,23 +33,11 @@ class Tokenizer {
         }).build();
     };
 
-    public tokenize = (text: string) => {
-        if (!this.kuromojiTokenizer) {
-            throw new Error("Tokenizerが初期化されていません。 先にinit()メッソードを実行してください。");
-        }
-
-        // 形態素解析
-        const tokens = this.kuromojiTokenizer.tokenize(text);
-        console.log(tokens);
-
-        return tokens;
-    };
-
     /**
      * kuromojiによって形態素解析された結果からある品詞の単語を抽出するメッソード
      * 抽出される単語のdefault品詞は名詞になっているが、必要によって他の品詞に変えることもできる。
      */
-    public extractIndexWord = (tokens: Token[], wordClass: string = "名詞") => {
+    public extractIndexWord = (tokens: Token[], wordClass: string = "名詞"): string[] => {
         const indexWords = tokens
             .filter(token => token.pos === wordClass)
             .map(token => {
@@ -57,6 +45,22 @@ class Tokenizer {
             });
 
         return indexWords;
+    };
+
+    /**
+     * 文書からtokenを取り出すメッソード
+     * まずkuromojiを使って形態素解析を行い、その後extractIndexWordを用いてtokenのみを抽出する
+     */
+    public tokenize = (text: string, wordClass: string = "名詞"): string[] => {
+        if (!this.kuromojiTokenizer) {
+            throw new Error("Tokenizerが初期化されていません。 先にinit()メッソードを実行してください。");
+        }
+
+        // 形態素解析
+        const tokens: Token[] = this.kuromojiTokenizer.tokenize(text);
+        // console.log(tokens);
+
+        return this.extractIndexWord(tokens, wordClass);
     };
 }
 
