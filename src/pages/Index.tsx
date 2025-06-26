@@ -45,23 +45,29 @@ function Index() {
         return tokens;
     };
 
-    const handleEnterKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleEnterKeyPress = async (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
             console.log(vocabularys);
         }
     };
 
     return (
-        <div>
-            <input
-                value={query}
-                onChange={e => {
-                    setQuery(e.target.value);
-                }}
-                onKeyDown={handleEnterKeyPress}
-            />
-            <p>{query}</p>
-        </div>
+        <div id="wrapper">
+            <div id="input-section">
+                <h1 style={{ fontFamily: 'Montserrat' }}>TF-IDF</h1>
+                <p>Input text</p>
+                <textarea
+                    value={query}
+                    onChange={e => {
+                        setQuery(e.target.value);
+                    }}
+                    rows={4}
+                    onKeyDown={handleEnterKeyPress}
+                />
+                {/* <p>{query}</p> */}
+            </div>
+            <div id="content-section"></div>
+        </div >
     );
 }
 
