@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import "./Index.css";
 import Tokenizer from "../utils/tokenizer";
-import type { Token } from "../types/Token";
+import TfIdf from "../utils/tfidf";
 
 function Index() {
     const [query, setQuery] = useState<string>("");
     const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
     const kuromoji = useRef<Tokenizer | null>(null);
+    const tfidf = new TfIdf();
 
-    const [test, setTest] = useState<Token[]>([]);
-
-    const [tokenArrays, setTokenArrays] = useState<string[][]>();
+    const [tokenArrays, setTokenArrays] = useState<string[][]>([]);
 
     const [vocabularys, setVocabularys] = useState<string[]>([]);
 
@@ -34,6 +33,9 @@ function Index() {
             // 重なっているtokenを全て消したarrayをvocabularysに記入
             const vocabularySet = new Set(tokensFromDocuments.flat());
             setVocabularys([...vocabularySet]);
+
+            // setVocabularysがまだ反映されていないので、vocabularySetをArrayにして入れる
+            tfidf.calculateTf(tokensFromDocuments[0], [...vocabularySet]);
         };
 
         initialize();
