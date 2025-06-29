@@ -1,10 +1,11 @@
 class TfIdf {
-    // 各文章やqueryのTFを求めるメッソド
+    /**
+     * 各文章やqueryのTFを求めるメッソド
+     * 各単語が文章に含まれている数/各文章の総単語数
+     */
     public calculateTf = (tokens: string[], vocabularys: string[]) => {
         const tfArray: number[] = new Array(vocabularys.length).fill(0);
         const totalOfWords = tokens.length;
-
-        console.log(tokens);
 
         tokens.forEach(token => {
             const index = vocabularys.indexOf(token);
@@ -18,9 +19,21 @@ class TfIdf {
         return tfArray;
     }
 
-    // 各単語のIDFを求めるメッソド
-    public calculateIdf = () => {
+    /**
+     * 各単語のIDFを求めるメッソド
+     */
+    public calculateIdf = (tokenArrays: string[][], vocabularys: string[]) => {
+        const idfArray: number[] = new Array(vocabularys.length).fill(0);
 
+        vocabularys.forEach((vocabulary, index) => {
+            tokenArrays.forEach(tokenArray => {
+                if (tokenArray.indexOf(vocabulary) !== -1) idfArray[index] += 1;
+            })
+        })
+
+        idfArray.forEach((idf, index) => idfArray[index] = Math.log(tokenArrays.length / idf));
+
+        return idfArray;
     }
 
     // TF-IDFを求めるメッソド

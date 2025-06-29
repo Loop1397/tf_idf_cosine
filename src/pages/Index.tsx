@@ -10,6 +10,7 @@ function Index() {
     const tfidf = new TfIdf();
 
     const [tokenArrays, setTokenArrays] = useState<string[][]>([]);
+    const [idf, setIdf] = useState<number[]>([]);
 
     const [vocabularys, setVocabularys] = useState<string[]>([]);
 
@@ -30,12 +31,14 @@ function Index() {
             });
             setTokenArrays(tokensFromDocuments);
 
-            // 重なっているtokenを全て消したarrayをvocabularysに記入
+            // 文章で登場した全ての単語をvocabularysに記入
             const vocabularySet = new Set(tokensFromDocuments.flat());
             setVocabularys([...vocabularySet]);
 
             // setVocabularysがまだ反映されていないので、vocabularySetをArrayにして入れる
             tfidf.calculateTf(tokensFromDocuments[0], [...vocabularySet]);
+
+            tfidf.calculateIdf(tokensFromDocuments, [...vocabularySet]);
         };
 
         initialize();
