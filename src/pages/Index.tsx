@@ -12,8 +12,6 @@ function Index() {
     const [tokenArrays, setTokenArrays] = useState<string[][]>([]);
     const [idf, setIdf] = useState<number[]>([]);
 
-    const [vocabularys, setVocabularys] = useState<string[]>([]);
-
     /**
      * ページがローディングされた時に１回実行
      * kuromojiを使うための準備を行う。
@@ -31,9 +29,7 @@ function Index() {
             });
             setTokenArrays(tokensFromDocuments);
 
-            // 文章で登場した全ての単語をvocabularysに記入
-            const vocabularySet = new Set(tokensFromDocuments.flat());
-            setVocabularys([...vocabularySet]);
+            tfidf.init(tokensFromDocuments);
 
             // setVocabularysがまだ反映されていないので、vocabularySetをArrayにして入れる
             tfidf.calculateTf(tokensFromDocuments[0], [...vocabularySet]);
@@ -50,7 +46,6 @@ function Index() {
 
     const handleEnterKeyPress = async (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            console.log(vocabularys);
         }
     };
 
