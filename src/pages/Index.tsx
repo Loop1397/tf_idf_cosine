@@ -37,8 +37,6 @@ function Index() {
 
             // setVocabularysがまだ反映されていないので、vocabularySetをArrayにして入れる
             tfidf.calculateTf(tokensFromDocuments[0], [...vocabularySet]);
-
-            tfidf.calculateIdf(tokensFromDocuments, [...vocabularySet]);
         };
 
         initialize();
