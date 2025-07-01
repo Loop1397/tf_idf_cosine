@@ -56,8 +56,15 @@ class TfIdf {
 
 
     // TF-IDFを求めるメッソド
-    public calculateTfIdf = () => {
+    public calculateTfIdf = (tokens: string[]) => {
+        if (this.idfArray.length === 0 || this.vocabularys.length === 0) {
+            throw new Error("idfもしくはvocabularyが初期化されていません。 先にinit()メッソードを実行してください。");
+        }
+        else if (tokens.length !== this.vocabularys.length) {
+            throw new Error("データが変わりましたがidfとvocabularyが計算されておりません。先にinit()メッソードを実行してください。")
+        }
 
+        return this.calculateTf(tokens).map((tf, index) => tf * this.idfArray[index]);
     }
 }
 
