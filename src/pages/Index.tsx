@@ -2,37 +2,48 @@ import { useEffect, useRef, useState } from "react";
 import "./Index.css";
 import Tokenizer from "../utils/tokenizer";
 import TfIdf from "../utils/tfidf";
+import Similarity from "../utils/similarity";
 
 function Index() {
     const [query, setQuery] = useState<string>("");
     const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
     const kuromoji = useRef<Tokenizer | null>(null);
-    const tfidf = new TfIdf();
+    const tfIdf = useRef<TfIdf | null>(null);
+    const similarity = useRef<Similarity | null>(null);
 
     const [tokenArrays, setTokenArrays] = useState<string[][]>([]);
-    const [idf, setIdf] = useState<number[]>([]);
+    const [tfArrays, setTfArrays] = useState<number[][]>([]);
 
     /**
      * ページがローディングされた時に１回実行
-     * kuromojiを使うための準備を行う。
+     * kuromojiを使うための準備を行い、
+     * 文章(texts)からのtokenを抽出し、TFを求める。
      */
     useEffect(() => {
         const initialize = async () => {
+            // utilクラスの初期化
             const instance = new Tokenizer();
             await instance.init(); // 非同期初期化メッソード呼び出し
             kuromoji.current = instance;
+            tfIdf.current = new TfIdf();
+            similarity.current = new Similarity();
 
             // 文書からtokenを抽出し、それらをtokenArraysに入れる
-            const tokensFromDocuments: string[][] = [];
-            texts.forEach(text => {
-                tokensFromDocuments.push(kuromoji.current!.tokenize(text));
+            const tokenArraysTmp: string[][] = texts.map(text => {
+                return kuromoji.current!.tokenize(text);
             });
-            setTokenArrays(tokensFromDocuments);
+            setTokenArrays(tokenArraysTmp);
 
-            tfidf.init(tokensFromDocuments);
+            // 文書に出た全ての単語(vocabulary)とIDFをセット
+            tfIdf.current.init(tokenArraysTmp);
 
-            // setVocabularysがまだ反映されていないので、vocabularySetをArrayにして入れる
-            tfidf.calculateTf(tokensFromDocuments[0], [...vocabularySet]);
+            // 各文章のTfを計算する
+            const tfArraysTmp = tokenArraysTmp.map(tokens => {
+                return tfIdf.current!.calculateTf(tokens);
+            });
+            setTfArrays(tfArraysTmp);
+            console.log(tokenArraysTmp);
+            console.log(tfArraysTmp);
         };
 
         initialize();
