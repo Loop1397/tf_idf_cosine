@@ -49,14 +49,17 @@ function Index() {
         initialize();
     }, []);
 
-    const extractTokensFromText = (text: string) => {
+    const extractTfFromText = (text: string): number[] => {
         const tokens = kuromoji.current!.tokenize(text);
 
-        return tokens;
+        return tf;
     };
 
-    const handleEnterKeyPress = async (e: React.KeyboardEvent) => {
+    const handleEnterKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
+            // 重なっているqueryを処理するためにSetを使う。
+            setSearchQuerys([...new Set(kuromoji.current!.tokenize(query))]);
+            const queryTf = extractTfFromText(query);
         }
     };
 

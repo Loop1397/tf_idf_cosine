@@ -14,7 +14,7 @@
     height: 100%;
     box-shadow: 0px 8px 24px -2px rgb(223, 223, 223);
     border-radius: 10px;
-    background-color: white;
+    background-color: #FAFAFA;
     padding: 30px;
 }
 
@@ -28,7 +28,7 @@
 
 #input-section textarea {
     margin-top: 5px;
-    background-color: #F2F5F9;
+    background-color: #e7e9ec;
 
     font-family: "Noto Sans JP";
     width: 100%;
@@ -46,7 +46,7 @@
 #content-section {
     width: 800px;
     height: 100%;
-    box-shadow: 0px 8px 24px -2px rgb(223, 223, 223);
+    box-shadow: 0px 0px 24px rgb(223, 223, 223);
     border-radius: 10px;
-    background-color: white;
+    background-color: #FAFAFA;
 }
