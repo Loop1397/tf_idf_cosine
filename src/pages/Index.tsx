@@ -3,9 +3,11 @@ import "./Index.css";
 import Tokenizer from "../utils/tokenizer";
 import TfIdf from "../utils/tfidf";
 import Similarity from "../utils/similarity";
+import TokenTag from "../components/TokenTag";
 
 function Index() {
     const [query, setQuery] = useState<string>("");
+    const [searchQuerys, setSearchQuerys] = useState<string[]>([]);
     const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
     const kuromoji = useRef<Tokenizer | null>(null);
     const tfIdf = useRef<TfIdf | null>(null);
@@ -51,6 +53,7 @@ function Index() {
 
     const extractTfFromText = (text: string): number[] => {
         const tokens = kuromoji.current!.tokenize(text);
+        const tf = tfIdf.current!.calculateTf(tokens);
 
         return tf;
     };
@@ -76,7 +79,12 @@ function Index() {
                     rows={4}
                     onKeyDown={handleEnterKeyPress}
                 />
-                {/* <p>{query}</p> */}
+                {searchQuerys.length !== 0 ?
+                    <div>
+                        <p>Search query</p>
+                        <TokenTag tokens={searchQuerys} />
+                    </div> : null}
+
             </div>
             <div id="content-section"></div>
         </div >
