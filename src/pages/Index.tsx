@@ -4,18 +4,27 @@ import Tokenizer from "../utils/tokenizer";
 import TfIdf from "../utils/tfidf";
 import Similarity from "../utils/similarity";
 import TokenTag from "../components/TokenTag";
+import type { Data } from "../types/Data";
+
+
 
 function Index() {
     const [query, setQuery] = useState<string>("");
     const [searchQuerys, setSearchQuerys] = useState<string[]>([]);
-    const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
     const kuromoji = useRef<Tokenizer | null>(null);
     const tfIdf = useRef<TfIdf | null>(null);
     const similarity = useRef<Similarity | null>(null);
 
     const [tokenArrays, setTokenArrays] = useState<string[][]>([]);
-    const [tfArrays, setTfArrays] = useState<number[][]>([]);
-
+    const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
+    const [dataArray, setDataArray] = useState<Data[]>(
+        texts.map(text => ({
+            text,
+            tokenArray: [],
+            tfIdfArray: [],
+            result: 0
+        }))
+    );
     /**
      * ページがローディングされた時に１回実行
      * kuromojiを使うための準備を行い、
@@ -34,29 +43,27 @@ function Index() {
             const tokenArraysTmp: string[][] = texts.map(text => {
                 return kuromoji.current!.tokenize(text);
             });
-            setTokenArrays(tokenArraysTmp);
 
             // 文書に出た全ての単語(vocabulary)とIDFをセット
             tfIdf.current.init(tokenArraysTmp);
 
             // 各文章のTfを計算する
-            const tfArraysTmp = tokenArraysTmp.map(tokens => {
-                return tfIdf.current!.calculateTf(tokens);
+            const tfIdfArraysTmp = tokenArraysTmp.map(tokens => {
+                return tfIdf.current!.calculateTfIdf(tokens);
             });
-            setTfArrays(tfArraysTmp);
-            console.log(tokenArraysTmp);
-            console.log(tfArraysTmp);
+
+            const newDataArray = texts.map((text, i) => ({
+                text,
+                tokenArray: tokenArraysTmp[i],
+                tfIdfArray: tfIdfArraysTmp[i],
+                result: 0,
+            }));
+
+            setDataArray(newDataArray);
         };
 
         initialize();
     }, []);
-
-    const extractTfFromText = (text: string): number[] => {
-        const tokens = kuromoji.current!.tokenize(text);
-        const tf = tfIdf.current!.calculateTf(tokens);
-
-        return tf;
-    };
 
     const handleEnterKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
