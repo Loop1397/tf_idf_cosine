@@ -15,7 +15,6 @@ function Index() {
     const tfIdf = useRef<TfIdf | null>(null);
     const similarity = useRef<Similarity | null>(null);
 
-    const [tokenArrays, setTokenArrays] = useState<string[][]>([]);
     const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
     const [dataArray, setDataArray] = useState<Data[]>(
         texts.map(text => ({
@@ -25,6 +24,7 @@ function Index() {
             result: 0
         }))
     );
+
     /**
      * ページがローディングされた時に１回実行
      * kuromojiを使うための準備を行い、
@@ -67,9 +67,21 @@ function Index() {
 
     const handleEnterKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
+            const tokens = kuromoji.current!.tokenize(query);
             // 重なっているqueryを処理するためにSetを使う。
-            setSearchQuerys([...new Set(kuromoji.current!.tokenize(query))]);
-            const queryTf = extractTfFromText(query);
+            setSearchQuerys([...new Set(tokens)]);
+            const queryTfIdf = tfIdf.current!.calculateTfIdf(tokens);
+            const results = dataArray.map(data => {
+                // console.log(tfIdf, queryTfIdf);
+                return similarity.current!.calculateCosineSimilarity(data.tfIdfArray, queryTfIdf);
+            })
+
+            setDataArray(prev =>
+                prev.map((item, i) => ({
+                    ...item,                // 기존 값 유지
+                    result: results[i]      // result만 추가 또는 갱신
+                }))
+            );
         }
     };
 
@@ -93,7 +105,9 @@ function Index() {
                     </div> : null}
 
             </div>
-            <div id="content-section"></div>
+            <div id="content-section">
+
+            </div>
         </div >
     );
 }
