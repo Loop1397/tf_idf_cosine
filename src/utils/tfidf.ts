@@ -19,6 +19,7 @@ class TfIdf {
 
     /**
      * 各単語のIDFを求めるメッソド
+     * IDF(d,t) = ln(D / df(t)) + 1で計算
      */
     private setIdf = (tokenArrays: string[][]) => {
         const newIdf: number[] = new Array(this.vocabularys.length).fill(0);
@@ -29,7 +30,7 @@ class TfIdf {
             })
         })
 
-        newIdf.forEach((idf, index) => newIdf[index] = Math.log(tokenArrays.length / idf));
+        newIdf.forEach((idf, index) => newIdf[index] = Math.log(tokenArrays.length / idf) + 1);
 
         this.idfArray = newIdf;
     }
@@ -38,7 +39,7 @@ class TfIdf {
      * 各文章やqueryのTFを求めるメッソド
      * 各単語が文章に含まれている数/各文章の総単語数
      */
-    public calculateTf = (tokens: string[]): number[] => {
+    private calculateTf = (tokens: string[]): number[] => {
         const tfArray: number[] = new Array(this.vocabularys.length).fill(0);
         const totalOfWords = tokens.length;
 
@@ -59,9 +60,6 @@ class TfIdf {
     public calculateTfIdf = (tokens: string[]) => {
         if (this.idfArray.length === 0 || this.vocabularys.length === 0) {
             throw new Error("idfもしくはvocabularyが初期化されていません。 先にinit()メッソードを実行してください。");
-        }
-        else if (tokens.length !== this.vocabularys.length) {
-            throw new Error("データが変わりましたがidfとvocabularyが計算されておりません。先にinit()メッソードを実行してください。")
         }
 
         return this.calculateTf(tokens).map((tf, index) => tf * this.idfArray[index]);
