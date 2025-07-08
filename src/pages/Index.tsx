@@ -52,14 +52,12 @@ function Index() {
                 return tfIdf.current!.calculateTfIdf(tokens);
             });
 
-            const newDataArray = texts.map((text, i) => ({
+            setDataArray(texts.map((text, i) => ({
                 text,
                 tokenArray: tokenArraysTmp[i],
                 tfIdfArray: tfIdfArraysTmp[i],
                 result: 0,
-            }));
-
-            setDataArray(newDataArray);
+            })));
         };
 
         initialize();
@@ -67,6 +65,7 @@ function Index() {
 
     const handleEnterKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
+            console.log(dataArray)
             const tokens = kuromoji.current!.tokenize(query);
             // 重なっているqueryを処理するためにSetを使う。
             setSearchQuerys([...new Set(tokens)]);
@@ -80,7 +79,9 @@ function Index() {
                 prev.map((item, i) => ({
                     ...item,                // 기존 값 유지
                     result: results[i]      // result만 추가 또는 갱신
-                }))
+                })).sort((a, b) => {
+                    return b.result - a.result;
+                })
             );
         }
     };
@@ -106,7 +107,7 @@ function Index() {
 
             </div>
             <div id="content-section">
-
+                <p>{dataArray[0].result !== 0 ? dataArray[0].text : null}</p>
             </div>
         </div >
     );
