@@ -5,6 +5,7 @@ import TfIdf from "../utils/tfidf";
 import Similarity from "../utils/similarity";
 import TokenTag from "../components/TokenTag";
 import type { Data } from "../types/Data";
+import ResultTable from "../components/ResultTable";
 
 
 
@@ -15,10 +16,11 @@ function Index() {
     const tfIdf = useRef<TfIdf | null>(null);
     const similarity = useRef<Similarity | null>(null);
 
-    const texts: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
+    const documents: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
     const [dataArray, setDataArray] = useState<Data[]>(
-        texts.map(text => ({
-            text,
+        documents.map((document) => ({
+            documentIndex: ``,
+            document,
             tokenArray: [],
             tfIdfArray: [],
             result: 0
@@ -40,7 +42,7 @@ function Index() {
             similarity.current = new Similarity();
 
             // 文書からtokenを抽出し、それらをtokenArraysに入れる
-            const tokenArraysTmp: string[][] = texts.map(text => {
+            const tokenArraysTmp: string[][] = documents.map(text => {
                 return kuromoji.current!.tokenize(text);
             });
 
@@ -52,9 +54,10 @@ function Index() {
                 return tfIdf.current!.calculateTfIdf(tokens);
             });
 
-            setDataArray(texts.map((text, i) => ({
-                text,
-                tokenArray: tokenArraysTmp[i],
+            setDataArray(documents.map((document, i) => ({
+                documentIndex: `document ${i}`,
+                document,
+                tokenArray: [...new Set(tokenArraysTmp[i])],
                 tfIdfArray: tfIdfArraysTmp[i],
                 result: 0,
             })));
@@ -107,7 +110,7 @@ function Index() {
 
             </div>
             <div id="content-section">
-                <p>{dataArray[0].result !== 0 ? dataArray[0].text : null}</p>
+                {dataArray[0].result !== 0 ? <ResultTable dataArray={dataArray} /> : null}
             </div>
         </div >
     );

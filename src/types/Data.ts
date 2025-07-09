@@ -1,5 +1,6 @@
 export type Data = {
-    text: string;
+    documentIndex: string;
+    document: string;
     tokenArray: string[];
     tfIdfArray: number[];
     result: number;
