@@ -74,7 +74,6 @@ function Index() {
             setSearchQuerys([...new Set(tokens)]);
             const queryTfIdf = tfIdf.current!.calculateTfIdf(tokens);
             const results = dataArray.map(data => {
-                // console.log(tfIdf, queryTfIdf);
                 return similarity.current!.calculateCosineSimilarity(data.tfIdfArray, queryTfIdf);
             })
 
@@ -110,7 +109,7 @@ function Index() {
 
             </div>
             <div id="content-section">
-                {dataArray[0].result !== 0 ? <ResultTable dataArray={dataArray} /> : null}
+                {dataArray[0].result !== 0 ? <ResultTable dataArray={dataArray} searchQuerys={searchQuerys} /> : null}
             </div>
         </div >
     );

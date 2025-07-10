@@ -1,7 +1,12 @@
 import type { Data } from "../types/Data";
 import "./ResultTable.css";
+import TokenTag from "./TokenTag";
 
-function ResultTable({ dataArray }: { dataArray: Data[] }) {
+function ResultTable({ dataArray, searchQuerys }: { dataArray: Data[], searchQuerys: string[] }) {
+    const matchedTokens: string[][] = dataArray.map(data => {
+        return searchQuerys.filter(query => data.tokenArray.includes(query));
+    });
+
     return (
         <table style={{ width: "100%", marginTop: "30px" }}>
             <thead>
@@ -12,13 +17,13 @@ function ResultTable({ dataArray }: { dataArray: Data[] }) {
                 </tr>
             </thead>
             <tbody>
-                {dataArray.map((data) => (
+                {dataArray.map((data, i) => (
                     <tr
                         key={data.documentIndex}
                     >
                         <td>{data.documentIndex}</td>
                         <td>{data.result}</td>
-                        <td>{data.tokenArray}</td>
+                        <td>{<TokenTag tokens={matchedTokens[i]} />}</td>
                     </tr>
                 ))}
             </tbody>
