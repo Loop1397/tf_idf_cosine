@@ -8,12 +8,18 @@ function ResultTable({ dataArray, searchQuerys }: { dataArray: Data[], searchQue
     });
 
     return (
-        <table style={{ width: "100%", marginTop: "30px" }}>
+        <table>
             <thead>
                 <tr>
-                    <td style={{ borderBottom: "solid 2px ##e7e9ec" }}>Document</td>
-                    <td style={{ borderBottom: "solid 2px ##e7e9ec" }}>Cosine similartiy</td>
-                    <td style={{ borderBottom: "solid 2px ##e7e9ec" }}>Matched tokens</td>
+                    <td>
+                        <h3>Document</h3>
+                    </td>
+                    <td>
+                        <h3>Cosine similartiy</h3>
+                    </td>
+                    <td>
+                        <h3>Matched tokens</h3>
+                    </td>
                 </tr>
             </thead>
             <tbody>

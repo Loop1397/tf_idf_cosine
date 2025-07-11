@@ -1,0 +1,19 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+hr {
+    min-height: 50px;
+}
+
+h3 {
+    font-family: 'Montserrat';
+    font-size: 24px;
+}
+
+td {
+    padding: 5px;
+    border-bottom: solid 2px #e7e9ec;
+    height: 50px;
+}
