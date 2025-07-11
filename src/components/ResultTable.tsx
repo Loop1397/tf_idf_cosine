@@ -28,7 +28,7 @@ function ResultTable({ dataArray, searchQuerys }: { dataArray: Data[], searchQue
                         key={data.documentIndex}
                     >
                         <td>{data.documentIndex}</td>
-                        <td>{data.result}</td>
+                        <td>{data.result.toFixed(8)}</td>
                         <td>{<TokenTag tokens={matchedTokens[i]} />}</td>
                     </tr>
                 ))}
