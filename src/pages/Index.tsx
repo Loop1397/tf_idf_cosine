@@ -16,7 +16,7 @@ function Index() {
     const tfIdf = useRef<TfIdf | null>(null);
     const similarity = useRef<Similarity | null>(null);
 
-    const documents: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ"];
+    const documents: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ", "ガバイトの進化形、フカマルの最終進化形にあたる、サメと恐竜を合わせたような姿をした二足歩行のドラゴンポケモンである。"];
     const [dataArray, setDataArray] = useState<Data[]>(
         documents.map((document) => ({
             documentIndex: ``,
@@ -68,23 +68,28 @@ function Index() {
 
     const handleEnterKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            console.log(dataArray)
+            // console.log(dataArray)
             const tokens = kuromoji.current!.tokenize(query);
-            // 重なっているqueryを処理するためにSetを使う。
-            setSearchQuerys([...new Set(tokens)]);
-            const queryTfIdf = tfIdf.current!.calculateTfIdf(tokens);
-            const results = dataArray.map(data => {
-                return similarity.current!.calculateCosineSimilarity(data.tfIdfArray, queryTfIdf);
-            })
-
-            setDataArray(prev =>
-                prev.map((item, i) => ({
-                    ...item,                // 기존 값 유지
-                    result: results[i]      // result만 추가 또는 갱신
-                })).sort((a, b) => {
-                    return b.result - a.result;
+            try {
+                const queryTfIdf = tfIdf.current!.calculateTfIdf(tokens);
+                const results = dataArray.map(data => {
+                    return similarity.current!.calculateCosineSimilarity(data.tfIdfArray, queryTfIdf);
                 })
-            );
+
+                // 重なっているqueryを処理するためにSetを使う。
+                setSearchQuerys([...new Set(tokens)]);
+
+                setDataArray(prev =>
+                    prev.map((item, i) => ({
+                        ...item,                // 기존 값 유지
+                        result: results[i]      // result만 추가 또는 갱신
+                    })).sort((a, b) => {
+                        return b.result - a.result;
+                    })
+                );
+            } catch (e) {
+                alert(e);
+            }
         }
     };
 

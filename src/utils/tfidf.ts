@@ -62,6 +62,11 @@ class TfIdf {
             throw new Error("idfもしくはvocabularyが初期化されていません。 先にinit()メッソードを実行してください。");
         }
 
+        if (this.vocabularys.filter(vocabulary => new Set(tokens).has(vocabulary)).length === 0) {
+            throw new Error("一致する文書がありません！");
+        }
+
+
         return this.calculateTf(tokens).map((tf, index) => tf * this.idfArray[index]);
     }
 }
