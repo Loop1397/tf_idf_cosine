@@ -7,8 +7,6 @@ import TokenTag from "../components/TokenTag";
 import type { Data } from "../types/Data";
 import ResultTable from "../components/ResultTable";
 
-
-
 function Index() {
     const [query, setQuery] = useState<string>("");
     const [searchQuerys, setSearchQuerys] = useState<string[]>([]);
@@ -68,7 +66,7 @@ function Index() {
 
     const handleEnterKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            // console.log(dataArray)
+            e.preventDefault();
             const tokens = kuromoji.current!.tokenize(query);
             try {
                 const queryTfIdf = tfIdf.current!.calculateTfIdf(tokens);
@@ -90,6 +88,8 @@ function Index() {
             } catch (e) {
                 alert(e);
             }
+
+            setQuery('');
         }
     };
 
