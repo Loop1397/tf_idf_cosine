@@ -14,14 +14,18 @@ function Index() {
     const tfIdf = useRef<TfIdf | null>(null);
     const similarity = useRef<Similarity | null>(null);
 
-    const documents: string[] = ["りんごとみかん、みかんとバナナ", "りんごとバナナ、バナナとキウィ", "ガバイトの進化形、フカマルの最終進化形にあたる、サメと恐竜を合わせたような姿をした二足歩行のドラゴンポケモンである。"];
+    const documents: string[] = [
+        "りんごとみかん、みかんとバナナ",
+        "りんごとバナナ、バナナとキウィ",
+        "ガバイトの進化形、フカマルの最終進化形にあたる、サメと恐竜を合わせたような姿をした二足歩行のドラゴンポケモンである。",
+    ];
     const [dataArray, setDataArray] = useState<Data[]>(
-        documents.map((document) => ({
+        documents.map(document => ({
             documentIndex: ``,
             document,
             tokenArray: [],
             tfIdfArray: [],
-            result: 0
+            result: 0,
         }))
     );
 
@@ -52,13 +56,15 @@ function Index() {
                 return tfIdf.current!.calculateTfIdf(tokens);
             });
 
-            setDataArray(documents.map((document, i) => ({
-                documentIndex: `document ${i}`,
-                document,
-                tokenArray: [...new Set(tokenArraysTmp[i])],
-                tfIdfArray: tfIdfArraysTmp[i],
-                result: 0,
-            })));
+            setDataArray(
+                documents.map((document, i) => ({
+                    documentIndex: `document ${i}`,
+                    document,
+                    tokenArray: [...new Set(tokenArraysTmp[i])],
+                    tfIdfArray: tfIdfArraysTmp[i],
+                    result: 0,
+                }))
+            );
         };
 
         initialize();
@@ -72,31 +78,33 @@ function Index() {
                 const queryTfIdf = tfIdf.current!.calculateTfIdf(tokens);
                 const results = dataArray.map(data => {
                     return similarity.current!.calculateCosineSimilarity(data.tfIdfArray, queryTfIdf);
-                })
+                });
 
                 // 重なっているqueryを処理するためにSetを使う。
                 setSearchQuerys([...new Set(tokens)]);
 
                 setDataArray(prev =>
-                    prev.map((item, i) => ({
-                        ...item,                // 기존 값 유지
-                        result: results[i]      // result만 추가 또는 갱신
-                    })).sort((a, b) => {
-                        return b.result - a.result;
-                    })
+                    prev
+                        .map((item, i) => ({
+                            ...item, // 기존 값 유지
+                            result: results[i], // result만 추가 또는 갱신
+                        }))
+                        .sort((a, b) => {
+                            return b.result - a.result;
+                        })
                 );
             } catch (e) {
                 alert(e);
             }
 
-            setQuery('');
+            setQuery("");
         }
     };
 
     return (
         <div id="wrapper">
             <div id="input-section">
-                <h1 style={{ fontFamily: 'Montserrat' }}>TF-IDF</h1>
+                <h1 style={{ fontFamily: "Montserrat" }}>TF-IDF</h1>
                 <p>Input text</p>
                 <textarea
                     value={query}
@@ -106,17 +114,15 @@ function Index() {
                     rows={4}
                     onKeyDown={handleEnterKeyPress}
                 />
-                {searchQuerys.length !== 0 ?
+                {searchQuerys.length !== 0 ? (
                     <div>
                         <p>Search query</p>
                         <TokenTag tokens={searchQuerys} />
-                    </div> : null}
-
+                    </div>
+                ) : null}
             </div>
-            <div id="content-section">
-                {dataArray[0].result !== 0 ? <ResultTable dataArray={dataArray} searchQuerys={searchQuerys} /> : null}
-            </div>
-        </div >
+            <div id="content-section">{dataArray[0].result !== 0 ? <ResultTable dataArray={dataArray.filter(data => data.result !== 0)} searchQuerys={searchQuerys} /> : null}</div>
+        </div>
     );
 }
 
