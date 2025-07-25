@@ -30,7 +30,7 @@ class TfIdf {
             })
         })
 
-        newIdf.forEach((idf, index) => newIdf[index] = Math.log(tokenArrays.length / idf) + 1);
+        newIdf.forEach((idf, index) => newIdf[index] = Math.log(tokenArrays.length / idf));
 
         this.idfArray = newIdf;
     }

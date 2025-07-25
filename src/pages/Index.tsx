@@ -17,7 +17,9 @@ function Index() {
     const documents: string[] = [
         "りんごとみかん、みかんとバナナ",
         "りんごとバナナ、バナナとキウィ",
-        "ガバイトの進化形、フカマルの最終進化形にあたる、サメと恐竜を合わせたような姿をした二足歩行のドラゴンポケモンである。",
+        "キウィとぶどう",
+        "ぶどうと魚、キウィ",
+        "りんごとキウィ、バナナ",
     ];
     const [dataArray, setDataArray] = useState<Data[]>(
         documents.map(document => ({
